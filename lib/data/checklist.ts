@@ -63,7 +63,7 @@ export const CHECKLIST_CATEGORIES: ChecklistCategoryDef[] = [
         label: "생활가전",
         subCategories: [
           { id: "appliance-living-washer", label: "세탁기", applianceKey: "washer", items: [] },
-          { id: "appliance-living-dryer", label: "건조기", items: [] },
+          { id: "appliance-living-dryer", label: "건조기", applianceKey: "dryer", items: [] },
           { id: "appliance-living-robot-vacuum", label: "로봇청소기", applianceKey: "vacuum", applianceSection: "robot", items: [] },
           { id: "appliance-living-cordless-vacuum", label: "무선청소기", applianceKey: "vacuum", applianceSection: "cordless", items: [] },
           { id: "appliance-living-air-purifier", label: "공기청정기", items: [] },

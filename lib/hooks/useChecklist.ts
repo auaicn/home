@@ -48,11 +48,12 @@ function buildInitialState(
     for (const mid of cat.midCategories) {
       for (const sub of mid.subCategories) {
         const saved = persisted[sub.id]
+        const hasItems = sub.items.length > 0 || !!sub.applianceKey
         map.set(sub.id, {
           def: sub,
           selectedItem: saved?.selectedItem ?? null,
           memo: saved?.memo ?? sub.items[0]?.memo ?? "",
-          isExpanded: true,
+          isExpanded: hasItems,
         })
       }
     }

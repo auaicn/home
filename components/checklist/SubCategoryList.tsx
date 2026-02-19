@@ -6,6 +6,7 @@ import type {
   ChecklistItemDef,
   SelectedProduct,
 } from "@/lib/types/checklist"
+import { getProducts } from "@/lib/data/data"
 import { ItemPanel } from "./ItemPanel"
 
 interface SubCategoryListProps {
@@ -57,8 +58,10 @@ export function SubCategoryList({
         {midCategory.subCategories.map((sub) => {
           const state = subCategoryStates.get(sub.id)
           const isSelected = !!state?.selectedItem
-          const isExpanded = state?.isExpanded ?? true
+          const isExpanded = state?.isExpanded ?? false
           const price = state?.selectedItem?.priceKrw ?? 0
+          const applianceCount = getProducts(sub.applianceKey, sub.applianceSection).length
+          const itemCount = applianceCount + sub.items.length
 
           return (
             <div key={sub.id}>
@@ -86,6 +89,11 @@ export function SubCategoryList({
                     ].join(" ")}
                   >
                     {sub.label}
+                    {itemCount > 0 && (
+                      <span className="ml-1.5 text-xs text-zinc-400 dark:text-zinc-500 font-normal">
+                        ({itemCount})
+                      </span>
+                    )}
                   </span>
                   {isSelected && state?.selectedItem?.productLabel && (
                     <span className="text-xs text-zinc-400 dark:text-zinc-500 truncate">
