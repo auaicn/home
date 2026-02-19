@@ -7,7 +7,7 @@ import type {
   ChecklistItemDef,
   SelectedProduct,
 } from "@/lib/types/checklist"
-import { getProducts, getMinPrice, getProductLabel } from "@/lib/data/data"
+import { getProducts, getMinPrice, getProductLabel, getProductNote } from "@/lib/data/data"
 
 interface ItemPanelProps {
   subCategory: ChecklistSubCategoryDef
@@ -46,12 +46,16 @@ export function ItemPanel({
     onUpdateMemo(memo)
   }
 
-  function handleSelectAppliance(productId: string, productLabel: string, priceKrw: number) {
+  function handleSelectAppliance(productId: string, productLabel: string, priceKrw: number, note: string) {
     const alreadySelected = state.selectedItem?.productId === productId
     if (alreadySelected) {
       onSelectItem(null)
     } else {
       onSelectItem({ productId, productLabel, priceKrw })
+      if (note && !memo) {
+        setMemo(note)
+        onUpdateMemo(note)
+      }
     }
   }
 
@@ -114,13 +118,14 @@ export function ItemPanel({
               const productId = product.id as string
               const productLabel = getProductLabel(product)
               const price = getMinPrice(product)
+              const note = getProductNote(product)
               const isSelected = state.selectedItem?.productId === productId
 
               return (
                 <button
                   key={productId}
                   type="button"
-                  onClick={() => handleSelectAppliance(productId, productLabel, price)}
+                  onClick={() => handleSelectAppliance(productId, productLabel, price, note)}
                   className={[
                     "w-full text-left px-3 py-2 rounded-lg border transition-colors",
                     isSelected
@@ -133,9 +138,9 @@ export function ItemPanel({
                       <p className="text-sm text-zinc-800 dark:text-zinc-200 truncate">
                         {productLabel}
                       </p>
-                      {product.tier && (
-                        <p className="text-xs text-zinc-400 dark:text-zinc-500">
-                          {product.tier as string}
+                      {note && (
+                        <p className="text-xs text-zinc-400 dark:text-zinc-500 truncate">
+                          {note}
                         </p>
                       )}
                     </div>

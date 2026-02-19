@@ -98,7 +98,7 @@ export function ChecklistPage({ categories }: ChecklistPageProps) {
 
       {/* 중분류 집계 바 */}
       {activeMidCategoryTotal && (
-        <div className="bg-white dark:bg-zinc-900 px-4 pb-2 border-b border-zinc-100 dark:border-zinc-800">
+        <div className="bg-white dark:bg-zinc-900 px-4 pb-2 pt-2 border-b border-zinc-100 dark:border-zinc-800">
           <div className="max-w-2xl mx-auto flex justify-between text-xs text-zinc-400 dark:text-zinc-500">
             <span>
               {activeMidCategory?.label} · {activeMidCategoryTotal.selectedCount}/{activeMidCategoryTotal.totalCount}개 선택
