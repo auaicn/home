@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "data.schema.json",
+  "title": "DataDB",
+  "description": "제품 비교 데이터베이스 (가전, 칼, 침구 등 모든 카테고리)",
+  "type": "object",
+  "required": ["meta"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "description": "메타 정보",
+      "required": ["title", "updated", "currency", "categories"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "updated": { "type": "string", "description": "YYYY-MM 형식" },
+        "currency": { "type": "string", "enum": ["KRW", "USD", "EUR"] },
+        "categories": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "최상위 카테고리 키 목록"
+        }
+      }
+    }
+  },
+  "additionalProperties": {
+    "oneOf": [
+      { "$ref": "#/definitions/FlatCategory" },
+      { "$ref": "#/definitions/SectionedCategory" }
+    ]
+  },
+  "definitions": {
+    "Product": {
+      "type": "object",
+      "description": "개별 제품",
+      "required": ["id", "brand", "model"],
+      "properties": {
+        "id": { "type": "string" },
+        "brand": { "type": "string" },
+        "model": { "type": "string" },
+        "tier": {
+          "type": "string",
+          "enum": ["budget", "mid", "high", "premium", "ultra_premium", "tbd"]
+        },
+        "year": { "type": "integer" },
+        "price_krw": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "number", "minimum": 0 },
+            {
+              "type": "object",
+              "required": ["min", "max"],
+              "additionalProperties": false,
+              "properties": {
+                "min": { "type": "number", "minimum": 0 },
+                "max": { "type": "number", "minimum": 0 }
+              }
+            }
+          ],
+          "description": "가격 (원화). null=미정, 숫자=단일가, {min,max}=범위"
+        },
+        "price_note": { "type": "string" },
+        "pros": { "type": "array", "items": { "type": "string" } },
+        "cons": { "type": "array", "items": { "type": "string" } },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "recommended_for": { "type": "string" }
+      }
+    },
+    "FlatCategory": {
+      "type": "object",
+      "description": "products 배열을 직접 가진 카테고리 (예: tv, refrigerator)",
+      "required": ["label", "products"],
+      "properties": {
+        "label": { "type": "string" },
+        "note": { "type": "string" },
+        "products": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Product" }
+        }
+      }
+    },
+    "SectionedCategory": {
+      "type": "object",
+      "description": "sections으로 나뉜 카테고리 (예: vacuum → robot/cordless)",
+      "required": ["label", "sections"],
+      "properties": {
+        "label": { "type": "string" },
+        "note": { "type": "string" },
+        "sections": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["label", "products"],
+            "properties": {
+              "label": { "type": "string" },
+              "products": {
+                "type": "array",
+                "items": { "$ref": "#/definitions/Product" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

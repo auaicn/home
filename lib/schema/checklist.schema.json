@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "checklist.schema.json",
+  "title": "ChecklistCategories",
+  "description": "신혼집 준비 체크리스트 데이터 구조 (대분류 → 중분류 → 소분류 → 항목)",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/Category"
+  },
+  "definitions": {
+    "Category": {
+      "type": "object",
+      "description": "대분류 (예: 가전제품, 가구)",
+      "required": ["id", "label", "midCategories"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "고유 식별자 (kebab-case)",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "label": {
+          "type": "string",
+          "description": "화면 표시 이름 (예: 가전제품)"
+        },
+        "midCategories": {
+          "type": "array",
+          "description": "중분류 목록",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/MidCategory"
+          }
+        }
+      }
+    },
+    "MidCategory": {
+      "type": "object",
+      "description": "중분류 (예: 주방가전, 생활가전)",
+      "required": ["id", "label", "subCategories"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "고유 식별자 (kebab-case)",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "label": {
+          "type": "string",
+          "description": "화면 표시 이름 (예: 주방가전)"
+        },
+        "subCategories": {
+          "type": "array",
+          "description": "소분류 목록",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/SubCategory"
+          }
+        }
+      }
+    },
+    "SubCategory": {
+      "type": "object",
+      "description": "소분류 (예: 냉장고, 칼)",
+      "required": ["id", "label", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "고유 식별자 (kebab-case)",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "label": {
+          "type": "string",
+          "description": "화면 표시 이름 (예: 냉장고)"
+        },
+        "applianceKey": {
+          "type": "string",
+          "description": "data.json 최상위 카테고리 키 (예: refrigerator, tv)"
+        },
+        "applianceSection": {
+          "type": "string",
+          "description": "data.json 중첩 섹션 키 (예: robot, cordless)"
+        },
+        "items": {
+          "type": "array",
+          "description": "수동 입력 항목 목록",
+          "items": {
+            "$ref": "#/definitions/Item"
+          }
+        }
+      }
+    },
+    "Item": {
+      "type": "object",
+      "description": "항목 - 소분류 내 개별 제품/견적",
+      "required": ["id", "label"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "고유 식별자"
+        },
+        "label": {
+          "type": "string",
+          "description": "제품/견적 이름 (예: BALMUDA The Toaster K05B)"
+        },
+        "priceKrw": {
+          "type": "integer",
+          "description": "가격 (원화, 최저가 기준)",
+          "minimum": 0
+        },
+        "url": {
+          "type": "string",
+          "description": "구매/참고 링크",
+          "format": "uri"
+        },
+        "memo": {
+          "type": "string",
+          "description": "초기 메모"
+        }
+      }
+    }
+  }
+}
